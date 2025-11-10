@@ -2,3 +2,5 @@ torch
 transformers
 accelerate
 bitsandbytes
+dotenv
+openai

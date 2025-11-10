@@ -2,6 +2,8 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import sys
 import json
+from dotenv import load_dotenv
+import os
 
 TEST_MODEL_ID = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
@@ -23,7 +25,9 @@ def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
 
     try:
         # 1. Load Tokenizer
-        tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True)
+        load_dotenv()
+        access_token = os.getenv("HUGGING_FACE_TOKEN")
+        tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True, trust_remote_code=True, use_auth_token=access_token)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             print(f"Set tokenizer.pad_token to tokenizer.eos_token.")
@@ -33,7 +37,8 @@ def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
             model_id,
             quantization_config=quantization_config,
             device_map=device_map,
-            trust_remote_code=True
+            trust_remote_code=True,
+            use_auth_token=access_token
         )
         model.eval() # Set model to evaluation mode
         print(f"Model loaded successfully. Weights are 4-bit. Device map: {device_map}.")
