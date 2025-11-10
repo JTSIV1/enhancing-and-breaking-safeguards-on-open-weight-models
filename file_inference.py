@@ -79,13 +79,13 @@ if __name__ == '__main__':
                 output = model.generate(
                     input_ids, 
                     attention_mask=attention_mask,
-                    max_new_tokens=200, 
+                    max_new_tokens=50, 
                     do_sample=True, 
                     temperature=0.7
                 )
             
             response = tokenizer.decode(output[0], skip_special_tokens=True)
-            
+            response = response[len(test_prompt):]
             outputs.append(response)
 
         with open(out_file, "w") as f:
