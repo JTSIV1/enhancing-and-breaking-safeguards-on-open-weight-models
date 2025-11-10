@@ -38,7 +38,7 @@ def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
             quantization_config=quantization_config,
             device_map=device_map,
             trust_remote_code=True,
-            use_auth_token=access_token
+            token=access_token
         )
         model.eval() # Set model to evaluation mode
         print(f"Model loaded successfully. Weights are 4-bit. Device map: {device_map}.")
