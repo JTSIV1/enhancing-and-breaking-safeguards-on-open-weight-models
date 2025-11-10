@@ -27,7 +27,7 @@ def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
         # 1. Load Tokenizer
         load_dotenv()
         access_token = os.getenv("HUGGING_FACE_TOKEN")
-        tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True, trust_remote_code=True, use_auth_token=access_token)
+        tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=True, trust_remote_code=True, token=access_token)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             print(f"Set tokenizer.pad_token to tokenizer.eos_token.")
