@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, FineGrainedFP8Config, Mxfp4Config
 import sys
 import json
 from dotenv import load_dotenv
@@ -10,18 +10,22 @@ TEST_MODEL_ID = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 model_map = {
     "llama": "meta-llama/Meta-Llama-3.1-8B-Instruct",
     "gpt-oss": "openai/gpt-oss-20b",
-    "deepseek": "deepseek-ai/deepseek-math-7b-instruct"
+    "deepseek": "deepseek-ai/DeepSeek-R1"
 }
 
-def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
-    print(f"Loading model: {model_id} with 4-bit quantization...")
-    
-    quantization_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_compute_dtype=torch.bfloat16
-    )
+def load_model_and_tokenizer(model_id: str):
+    print(f"Loading model: {model_id}")
+    if "deepseek" in model_id.lower():
+        quantization_config = FineGrainedFP8Config()
+    elif "gpt-oss" in model_id.lower():
+        quantization_config = Mxfp4Config()
+    else:
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
 
     try:
         # 1. Load Tokenizer
@@ -36,12 +40,12 @@ def load_model_and_tokenizer(model_id: str, device_map: str = "auto"):
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             quantization_config=quantization_config,
-            device_map=device_map,
+            device_map="cpu",
             trust_remote_code=True,
             token=access_token
         )
-        model.eval() # Set model to evaluation mode
-        print(f"Model loaded successfully. Weights are 4-bit. Device map: {device_map}.")
+        model.eval()
+        print(f"Model loaded successfully: {model_id}")
         
         return model, tokenizer
         
@@ -62,7 +66,7 @@ if __name__ == '__main__':
     model_id = model_map.get(model, TEST_MODEL_ID)
 
     print(f"Attempting to load a test model: {model_id}")
-    model, tokenizer = load_model_and_tokenizer(model_id, device_map="cpu")
+    model, tokenizer = load_model_and_tokenizer(model_id)
 
     with open(input_file, "r") as f:
         prompt_data = json.load(f)
