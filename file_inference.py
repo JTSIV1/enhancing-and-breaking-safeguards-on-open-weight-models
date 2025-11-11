@@ -4,6 +4,7 @@ import sys
 import json
 from dotenv import load_dotenv
 import os
+from tqdm import tqdm
 
 TEST_MODEL_ID = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     
     if model and tokenizer:
         outputs = []
-        for prompt in prompt_data:
+        for prompt in tqdm(prompt_data, desc="Generating responses"):
             test_prompt = ''
             for question in prompt:
                 test_prompt += "\nUser request: " + question + "\nResponse: "
