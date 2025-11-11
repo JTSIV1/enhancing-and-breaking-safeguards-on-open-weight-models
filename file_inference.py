@@ -98,7 +98,7 @@ if __name__ == '__main__':
             outputs.append(response)
 
         with open(out_file, "w") as f:
-            json.dump(outputs, f)
+            json.dump(outputs, f, indent=4)
         print(f"Test model run successfully. Output saved to {out_file}")
     else:
         print("Failed to load test model.")
