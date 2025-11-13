@@ -1,0 +1,14 @@
+[project]
+name = "17331-Project"
+version = "0.1.0"
+description = "Enhancing and Breaking Safeguards on Open Weight Models"
+readme = "README.md"
+dependencies = [
+	"torch",
+	"transformers",
+	"accelerate",
+	"bitsandbytes",
+	"dotenv",
+	"openai",
+	"tqdm",
+]
