@@ -44,7 +44,7 @@ def load_model_and_tokenizer(model_id: str):
         )
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
-            print(f"Set tokenizer.pad_token to tokenizer.eos_token.")
+            print("Set tokenizer.pad_token to tokenizer.eos_token.")
 
         # 2. Load Model with Quantization
         model = AutoModelForCausalLM.from_pretrained(

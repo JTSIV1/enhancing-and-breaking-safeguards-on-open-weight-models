@@ -8,6 +8,12 @@ import uuid
 
 JOB_ID_LOG_FILE = "job_id.log"
 
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is not set.")
+OpenAI.api_key = api_key
+
 
 def generate_batch_file(in_file, out_file):
     with open(in_file) as f:
@@ -34,9 +40,6 @@ def generate_batch_file(in_file, out_file):
 
 
 def submit_batch_file(file_path, nickname):
-    load_dotenv()
-    OpenAI.api_key = os.getenv("OPENAI_API_KEY")
-
     client = OpenAI()
 
     batch_input_file = client.files.create(file=open(file_path, "rb"), purpose="batch")
@@ -68,18 +71,17 @@ def submit_batch_file(file_path, nickname):
 
 
 def get_status(code):
-    load_dotenv()
-    OpenAI.api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI()
     print("Job Status:", client.batches.retrieve(code).status)
 
 
 def get_result(code, out_file):
-    load_dotenv()
-    OpenAI.api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI()
 
-    file_response = client.files.content(client.batches.retrieve(code).output_file_id)
+    output_file_id = client.batches.retrieve(code).output_file_id
+    if output_file_id is None:
+        raise ValueError("Output file ID is None. Cannot retrieve file content.")
+    file_response = client.files.content(output_file_id)
 
     response_text = []
     for line in file_response.text.split("\n"):

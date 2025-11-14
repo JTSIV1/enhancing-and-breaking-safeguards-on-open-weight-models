@@ -2,7 +2,6 @@ from file_inference import load_model_and_tokenizer, TEST_MODEL_ID
 import sys
 import json
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 if __name__ == "__main__":
     in_file = sys.argv[1]
