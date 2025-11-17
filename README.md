@@ -1,4 +1,4 @@
-# enhancing-and-breaking-safeguards-on-open-weight-models
+# Enhancing and Breaking Safeguards on Open Weight Models
 
 ## Setups steps before running:
 
