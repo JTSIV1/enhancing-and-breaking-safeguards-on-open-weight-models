@@ -50,7 +50,7 @@ def load_model_and_tokenizer(model_id: str):
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             quantization_config=quantization_config,
-            device_map="cpu",
+            device_map="auto",
             trust_remote_code=True,
             token=access_token,
         )
