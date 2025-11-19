@@ -2,6 +2,7 @@ from file_inference import load_model_and_tokenizer, TEST_MODEL_ID
 import sys
 import json
 import torch
+from tqdm import tqdm
 
 if __name__ == "__main__":
     in_file = sys.argv[1]
@@ -29,7 +30,7 @@ if __name__ == "__main__":
         acceptances = 0
         others = 0
         failed_sentences = []
-        for prompt in prompts:
+        for prompt in tqdm(prompts, desc="Processing prompts"):
             inputs = tokenizer(prompt, return_tensors="pt")
 
             input_ids = inputs.input_ids.to(model.device)
