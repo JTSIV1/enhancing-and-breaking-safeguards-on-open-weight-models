@@ -106,6 +106,7 @@ if __name__ == "__main__":
                     max_new_tokens=50,
                     do_sample=True,
                     temperature=0.7,
+                    use_cache=False,
                 )
 
             response = tokenizer.decode(output[0], skip_special_tokens=True)
