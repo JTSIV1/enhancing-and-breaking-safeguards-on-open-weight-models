@@ -54,6 +54,7 @@ def load_model_and_tokenizer(model_id: str):
         }
         if quantization_config is not None:
             kwargs["quantization_config"] = quantization_config
+        else:
             kwargs["torch_dtype"] = torch.bfloat16
         
         model = AutoModelForCausalLM.from_pretrained(
