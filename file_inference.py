@@ -24,7 +24,12 @@ model_map = {
 def load_model_and_tokenizer(model_id: str):
     print(f"Loading model: {model_id}")
     if "deepseek" in model_id.lower():
-        quantization_config = FineGrainedFP8Config()
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
     elif "gpt-oss" in model_id.lower():
         quantization_config = Mxfp4Config()
     else:
