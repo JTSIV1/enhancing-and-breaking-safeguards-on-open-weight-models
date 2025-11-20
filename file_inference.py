@@ -47,12 +47,17 @@ def load_model_and_tokenizer(model_id: str):
             print("Set tokenizer.pad_token to tokenizer.eos_token.")
 
         # 2. Load Model with Quantization
+        kwargs = {
+            "device_map": "auto",
+            "trust_remote_code": True,
+            "token": access_token,
+        }
+        if quantization_config is not None:
+            kwargs["quantization_config"] = quantization_config
+        
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
-            quantization_config=quantization_config,
-            device_map="auto",
-            trust_remote_code=True,
-            token=access_token,
+            **kwargs
         )
         model.eval()
         print(f"Model loaded successfully: {model_id}")
