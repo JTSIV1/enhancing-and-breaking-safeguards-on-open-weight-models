@@ -8,7 +8,6 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     BitsAndBytesConfig,
-    FineGrainedFP8Config,
     Mxfp4Config,
 )
 
@@ -24,7 +23,7 @@ model_map = {
 def load_model_and_tokenizer(model_id: str):
     print(f"Loading model: {model_id}")
     if "deepseek" in model_id.lower():
-        quantization_config = FineGrainedFP8Config()
+        quantization_config = None
     elif "gpt-oss" in model_id.lower():
         quantization_config = Mxfp4Config()
     else:
@@ -47,12 +46,19 @@ def load_model_and_tokenizer(model_id: str):
             print("Set tokenizer.pad_token to tokenizer.eos_token.")
 
         # 2. Load Model with Quantization
+        kwargs = {
+            "device_map": "auto",
+            "trust_remote_code": True,
+            "token": access_token,
+        }
+        if quantization_config is not None:
+            kwargs["quantization_config"] = quantization_config
+        else:
+            kwargs["dtype"] = torch.float16
+        
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
-            quantization_config=quantization_config,
-            device_map="cpu",
-            trust_remote_code=True,
-            token=access_token,
+            **kwargs
         )
         model.eval()
         print(f"Model loaded successfully: {model_id}")
@@ -106,6 +112,7 @@ if __name__ == "__main__":
                     max_new_tokens=50,
                     do_sample=True,
                     temperature=0.7,
+                    use_cache=False,
                 )
 
             response = tokenizer.decode(output[0], skip_special_tokens=True)
