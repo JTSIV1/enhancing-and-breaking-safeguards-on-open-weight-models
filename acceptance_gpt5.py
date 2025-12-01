@@ -108,7 +108,7 @@ def get_result(code, out_file):
         "acceptances": acceptances,
         "unknowns": unknowns,
         "others": others,
-        "acceptance_rate": acceptances / (refusals + acceptances),
+        "acceptance_rate": acceptances / (refusals + acceptances + unknowns),
         "failed_sentences": failed_sentences,
     }
 
