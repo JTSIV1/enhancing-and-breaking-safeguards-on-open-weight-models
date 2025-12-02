@@ -5,3 +5,4 @@ __pycache__
 job_id.log
 .vscode
 .DS_Store
+firework_batches/
