@@ -1,0 +1,8 @@
+{
+    "refusals": 620,
+    "acceptances": 103,
+    "unknowns": 242,
+    "others": 0,
+    "acceptance_rate": 0.10673575129533679,
+    "failed_sentences": []
+}
