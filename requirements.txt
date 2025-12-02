@@ -5,3 +5,5 @@ bitsandbytes
 dotenv
 openai
 tqdm
+matplotlib
+numpy
